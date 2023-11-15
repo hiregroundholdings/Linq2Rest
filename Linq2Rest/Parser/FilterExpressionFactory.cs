@@ -26,8 +26,10 @@ namespace LinqCovertTools.Parser
     /// </summary>
     public class FilterExpressionFactory : IFilterExpressionFactory
     {
-        private static readonly Regex StringRx = new Regex(@"^[""'](.*?)[""']$", RegexOptions.Compiled);
-        private static readonly Regex NegateRx = new Regex(@"^-[^\d]*", RegexOptions.Compiled);
+        private static readonly Regex StringRx = new(@"^[""'](.*?)[""']$", RegexOptions.Compiled);
+        private static readonly Regex NegateRx = new(@"^-[^\d]*", RegexOptions.Compiled);
+        private static readonly Expression _nullConstantExpression = Expression.Constant(null, typeof(object));
+
         private readonly IMemberNameResolver _memberNameResolver;
         private readonly ParameterValueReader _valueReader;
 
@@ -92,7 +94,22 @@ namespace LinqCovertTools.Parser
 
         private static Expression GetOperation(string token, Expression? left, Expression right)
         {
-            return left == null ? GetRightOperation(token, right) : GetLeftRightOperation(token, left, right);
+            return left == null ? GetRightOperation(token, right) : GetNullSafeLeftRightOperation(token, left, right);
+        }
+
+        private static Expression GetNullSafeLeftRightOperation(string token, Expression left, Expression right)
+        {
+            Expression binaryExpression = GetLeftRightOperation(token, left, right);
+            if (left is MemberExpression memberExpression && memberExpression.Expression?.NodeType == ExpressionType.MemberAccess)
+            {
+                return Expression.AndAlso(Expression.NotEqual(_nullConstantExpression, memberExpression.Expression), binaryExpression);
+            }
+            else if (left is MethodCallExpression methodCallExpression && methodCallExpression.Object?.NodeType == ExpressionType.MemberAccess)
+            {
+                return Expression.AndAlso(Expression.NotEqual(_nullConstantExpression, methodCallExpression.Object), binaryExpression);
+            }
+
+            return binaryExpression;
         }
 
         private static Expression GetLeftRightOperation(string token, Expression left, Expression right)
@@ -108,6 +125,7 @@ namespace LinqCovertTools.Parser
                         var andExpression = Expression.And(leftValue, rightValue);
                         return Expression.Equal(andExpression, rightValue);
                     }
+
                     return Expression.Equal(left, right);
                 case "NE":
                     return Expression.NotEqual(left, right);
@@ -161,23 +179,23 @@ namespace LinqCovertTools.Parser
             switch (function.ToUpperInvariant())
             {
                 case "SUBSTRINGOF":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(right, MethodProvider.ContainsMethod, new[] { left }));
+                    return Expression.Call(right, MethodProvider.ContainsMethod, new[] { left });
                 case "ENDSWITH":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.EndsWithMethod, new[] { right }));
+                    return Expression.AndAlso(Expression.NotEqual(left, _nullConstantExpression), Expression.Call(left, MethodProvider.EndsWithMethod, new[] { right }));
                 case "STARTSWITH":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.StartsWithMethod, new[] { right }));
+                    return Expression.AndAlso(Expression.NotEqual(left, _nullConstantExpression), Expression.Call(left, MethodProvider.StartsWithMethod, new[] { right }));
                 case "LENGTH":
                     return Expression.Property(left, MethodProvider.LengthProperty);
                 case "INDEXOF":
-                    return Expression.Call(Expression.Call(left, MethodProvider.ToLowerMethod), MethodProvider.IndexOfMethod, new[] { Expression.Call(right, MethodProvider.ToLowerMethod) });
+                    return Expression.Call(left, MethodProvider.IndexOfMethod, new[] { right });
                 case "SUBSTRING":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.SubstringMethod, new[] { right }));
+                    return Expression.Call(left, MethodProvider.SubstringMethod, new[] { right });
                 case "TOLOWER":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.ToLowerMethod));
+                    return Expression.Call(left, MethodProvider.ToLowerMethod);
                 case "TOUPPER":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.ToUpperMethod));
+                    return Expression.Call(left, MethodProvider.ToUpperMethod);
                 case "TRIM":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.TrimMethod));
+                    return Expression.Call(left, MethodProvider.TrimMethod);
                 case "HOUR":
                     return Expression.Property(left, MethodProvider.HourProperty);
                 case "MINUTE":
