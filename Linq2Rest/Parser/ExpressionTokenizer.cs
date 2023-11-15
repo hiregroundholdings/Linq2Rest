@@ -156,8 +156,6 @@ namespace LinqCovertTools.Parser
 
         public static TokenSet GetAnyAllFunctionTokens(this string filter)
         {
-
-
             var functionMatch = AnyAllFunctionRx.Match(filter);
             if (!functionMatch.Success)
             {
@@ -178,8 +176,6 @@ namespace LinqCovertTools.Parser
 
         public static TokenSet GetFunctionTokens(this string filter)
         {
-
-
             var functionMatch = FunctionRx.Match(filter);
             if (!functionMatch.Success)
             {

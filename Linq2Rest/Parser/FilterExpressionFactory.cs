@@ -38,9 +38,6 @@ namespace LinqCovertTools.Parser
         /// <param name="expressionFactories">The custom <see cref="IValueExpressionFactory"/> to use for value conversion.</param>
         public FilterExpressionFactory(IMemberNameResolver memberNameResolver, IEnumerable<IValueExpressionFactory> expressionFactories)
         {
-
-
-
             _valueReader = new ParameterValueReader(expressionFactories);
             _memberNameResolver = memberNameResolver;
         }
@@ -84,9 +81,6 @@ namespace LinqCovertTools.Parser
 
         private static Type GetFunctionParameterType(string operation)
         {
-
-
-            switch (operation.ToLowerInvariant())
             {
                 case "substring":
                     return typeof(int);
@@ -97,19 +91,11 @@ namespace LinqCovertTools.Parser
 
         private static Expression GetOperation(string token, Expression left, Expression right)
         {
-
-
-
             return left == null ? GetRightOperation(token, right) : GetLeftRightOperation(token, left, right);
         }
 
         private static Expression GetLeftRightOperation(string token, Expression left, Expression right)
         {
-
-
-
-
-            switch (token.ToLowerInvariant())
             {
                 case "eq":
                     if (left.Type.IsEnum && left.Type.GetCustomAttributes(typeof(FlagsAttribute), true).Any())
@@ -120,7 +106,6 @@ namespace LinqCovertTools.Parser
                         var andExpression = Expression.And(leftValue, rightValue);
                         return Expression.Equal(andExpression, rightValue);
                     }
-
                     return Expression.Equal(left, right);
                 case "ne":
                     return Expression.NotEqual(left, right);
@@ -153,9 +138,6 @@ namespace LinqCovertTools.Parser
 
         private static Expression GetRightOperation(string token, Expression right)
         {
-
-
-
             Expression result = null;
             switch (token.ToLowerInvariant())
             {
@@ -222,7 +204,6 @@ namespace LinqCovertTools.Parser
                                                       lambdaParameters,
                                                       MethodProvider.GetAnyAllMethod(function.Capitalize(), left.Type));
                     }
-
                 default:
                     return null;
             }
@@ -235,9 +216,6 @@ namespace LinqCovertTools.Parser
             IEnumerable<ParameterExpression> lambdaParameters,
             MethodInfo anyAllMethod)
         {
-
-
-
             var genericFunc = typeof(Func<,>)
                 .MakeGenericType(
                                  MethodProvider.GetIEnumerableImpl(left.Type).GetGenericArguments()[0],
@@ -260,8 +238,6 @@ namespace LinqCovertTools.Parser
 
         private static Type GetNonNullableType(Type type)
         {
-
-
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)
                     ? type.GetGenericArguments()[0]
                     : type;
@@ -269,8 +245,6 @@ namespace LinqCovertTools.Parser
 
         private static bool SupportsNegate(Type type)
         {
-
-
             type = GetNonNullableType(type);
             if (!type.IsEnum)
             {
@@ -291,7 +265,6 @@ namespace LinqCovertTools.Parser
         private Expression GetBooleanExpression(string filter, IFormatProvider formatProvider)
         {
 
-
             var booleanExpression = _valueReader.Read(typeof(bool), filter, formatProvider) as ConstantExpression;
             return booleanExpression != null && booleanExpression.Value != null
                 ? booleanExpression
@@ -300,8 +273,6 @@ namespace LinqCovertTools.Parser
 
         private Expression GetParameterExpression(string filter, Type type, IFormatProvider formatProvider)
         {
-
-
             return type != null
                 ? _valueReader.Read(type, filter, formatProvider)
                 : GetBooleanExpression(filter, formatProvider);
@@ -309,9 +280,6 @@ namespace LinqCovertTools.Parser
 
         private Type GetExpressionType<T>(TokenSet set, ParameterExpression parameter, ICollection<ParameterExpression> lambdaParameters)
         {
-
-
-
             if (set == null)
             {
                 return null;
@@ -411,8 +379,6 @@ namespace LinqCovertTools.Parser
                     type,
                     formatProvider);
 
-
-
                 if (SupportsNegate(negateExpression.Type))
                 {
                     return Expression.Negate(negateExpression);
@@ -493,10 +459,6 @@ namespace LinqCovertTools.Parser
 
         private Expression GetArithmeticExpression<T>(string filter, ParameterExpression parameter, ICollection<ParameterExpression> lambdaParameters, Type type, IFormatProvider formatProvider)
         {
-
-
-
-
             var arithmeticToken = filter.GetArithmeticToken();
             if (arithmeticToken == null)
             {
@@ -587,9 +549,6 @@ namespace LinqCovertTools.Parser
 
             public IEnumerable<ParameterExpression> GetParameters(Expression expr)
             {
-
-
-
                 _parameters = new List<ParameterExpression>();
                 Visit(expr);
                 return _parameters;
@@ -597,8 +556,6 @@ namespace LinqCovertTools.Parser
 
             public override Expression Visit(Expression node)
             {
-
-
                 if (node.NodeType == ExpressionType.Call && AnyAllMethodNames.Contains(((MethodCallExpression)node).Method.Name))
                 {
                     // Skip the second parameter of the Any/All as this has already been covered
@@ -610,8 +567,6 @@ namespace LinqCovertTools.Parser
 
             protected override Expression VisitBinary(BinaryExpression node)
             {
-
-
                 if (node.NodeType == ExpressionType.AndAlso)
                 {
                     Visit(node.Left);
@@ -624,9 +579,6 @@ namespace LinqCovertTools.Parser
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-
-
-
                 if (!_parameters.Contains(node))
                 {
                     _parameters.Add(node);
