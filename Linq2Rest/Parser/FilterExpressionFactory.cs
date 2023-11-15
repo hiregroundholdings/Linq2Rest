@@ -185,7 +185,7 @@ namespace LinqCovertTools.Parser
                 case "length":
                     return Expression.Property(left, MethodProvider.LengthProperty);
                 case "indexof":
-                    return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.IndexOfMethod, new[] { right }));
+                    return Expression.Call(Expression.Call(left, MethodProvider.ToLowerMethod), MethodProvider.IndexOfMethod, new[] { Expression.Call(right, MethodProvider.ToLowerMethod) });
                 case "substring":
                     return Expression.AndAlso(Expression.NotEqual(left, Expression.Constant(null, typeof(object))), Expression.Call(left, MethodProvider.SubstringMethod, new[] { right }));
                 case "tolower":
