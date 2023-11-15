@@ -70,6 +70,7 @@ namespace LinqCovertTools
         /// Converts an OData formatted query into an expression.
         /// </summary>
         /// <param name="filter">The query to convert.</param>
+        /// <param name="ignoreCase">When true the returned expression ensures string case is ignored.</param>
         /// <typeparam name="T">The parameter type.</typeparam>
         /// <returns>An expression tree for the passed query.</returns>
         public Expression<Func<T, bool>> Convert<T>(string filter, bool ignoreCase = false)
