@@ -100,7 +100,7 @@ namespace LinqCovertTools.Parser
         private static Expression GetNullSafeLeftRightOperation(string token, Expression left, Expression right)
         {
             Expression binaryExpression = GetLeftRightOperation(token, left, right);
-            if (left is MemberExpression memberExpression && memberExpression.Expression?.NodeType == ExpressionType.MemberAccess)
+            if (left is MemberExpression memberExpression && memberExpression.Expression?.NodeType == ExpressionType.MemberAccess && !memberExpression.Expression.Type.IsValueType)
             {
                 return Expression.AndAlso(Expression.NotEqual(_nullConstantExpression, memberExpression.Expression), binaryExpression);
             }
