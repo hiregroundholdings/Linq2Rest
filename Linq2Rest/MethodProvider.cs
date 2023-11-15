@@ -287,11 +287,9 @@ namespace LinqCovertTools
                 return type;
             }
 
-            var interfaces = type.FindInterfaces((m, o) => IsIEnumerable(m), null);
+            Type[] interfaces = type.FindInterfaces((m, o) => IsIEnumerable(m), null);
 
-
-
-            var t = interfaces.First();
+            Type t = interfaces[0];
 
             return t;
         }

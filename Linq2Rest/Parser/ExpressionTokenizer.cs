@@ -154,7 +154,7 @@ namespace LinqCovertTools.Parser
             return new TokenSet { Left = left, Operation = operation, Right = right };
         }
 
-        public static TokenSet GetAnyAllFunctionTokens(this string filter)
+        public static TokenSet? GetAnyAllFunctionTokens(this string filter)
         {
             var functionMatch = AnyAllFunctionRx.Match(filter);
             if (!functionMatch.Success)
@@ -174,7 +174,7 @@ namespace LinqCovertTools.Parser
             };
         }
 
-        public static TokenSet GetFunctionTokens(this string filter)
+        public static TokenSet? GetFunctionTokens(this string filter)
         {
             var functionMatch = FunctionRx.Match(filter);
             if (!functionMatch.Success)
