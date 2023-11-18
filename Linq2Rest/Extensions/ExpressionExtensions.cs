@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
+﻿using System.Linq.Expressions;
 
 namespace LinqConvertTools.Extensions
 {
@@ -9,6 +6,16 @@ namespace LinqConvertTools.Extensions
     {
         public static Expression ReplaceMemberExpression(Type type, string memberName, string replacementMemberName, Expression expression, ParameterExpression? parameterExpression)
         {
+            if (string.IsNullOrEmpty(memberName))
+            {
+                throw new ArgumentNullException(nameof(memberName));
+            }
+
+            if (string.IsNullOrEmpty(replacementMemberName))
+            {
+                throw new ArgumentNullException(nameof(replacementMemberName));
+            }
+
             if (expression is LambdaExpression lambdaExpression)
             {
                 ParameterExpression? pe = parameterExpression ?? (lambdaExpression.Parameters.Count > 0 ? Expression.Parameter(type, "x") : null);
@@ -26,11 +33,19 @@ namespace LinqConvertTools.Extensions
                 Expression right = ReplaceMemberExpression(type, memberName, replacementMemberName, binaryExpression.Right, parameterExpression);
                 return binaryExpression.Update(left, binaryExpression.Conversion, right);
             }
-            else if (expression is MemberExpression memberExpression && memberExpression.Member?.Name == memberName)
+            else if (expression is MemberExpression memberExpression)
             {
                 ParameterExpression pe = parameterExpression ?? Expression.Parameter(type, "x");
-                Expression updatedMemberExpression = GetPropertyOrFieldExpression(pe, replacementMemberName);
-                return updatedMemberExpression;
+                if (memberExpression.Member?.Name == memberName)
+                {
+                    return GetPropertyOrFieldExpression(pe, replacementMemberName);
+                }
+                else if (memberExpression.Member is not null)
+                {
+                    return GetPropertyOrFieldExpression(pe, memberExpression.Member.Name);
+                }
+
+                return memberExpression;
             }
 
             return expression;

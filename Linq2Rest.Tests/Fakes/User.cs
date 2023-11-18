@@ -34,5 +34,7 @@ namespace LinqConvertTools.Tests.Fakes
         string? EmailAddress { get; }
 
         string? FirstName { get; }
+
+        string? FamilyName { get; }
     }
 }

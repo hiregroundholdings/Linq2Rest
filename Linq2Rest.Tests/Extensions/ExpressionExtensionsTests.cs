@@ -10,9 +10,41 @@ namespace LinqConvertTools.Tests.Extensions
     public class ExpressionExtensionsTests
     {
         [Test]
-        public void ConvertsFilterToExpressionForInterface()
+        public void ReplacesMemberName()
         {
             const string filter = "startswith(emailAddress, 'user@')";
+            ODataExpressionConverter converter = new();
+
+            Expression<Func<IQueryableUser, bool>> converted = converter.Convert<IQueryableUser>(filter);
+            Expression<Func<User, bool>> predicate = (Expression<Func<User, bool>>)converted.ReplaceMemberExpression<User>("EmailAddress", "EmailAddress.Value");
+
+            List<User> users = new()
+            {
+                new User()
+                {
+                    GivenName = "User",
+                    FamilyName = "One",
+                    EmailAddress = new EmailAddress("user@xyz.com")
+                },
+                new User()
+                {
+                    GivenName = "User",
+                    FamilyName = "Two",
+                    EmailAddress = new EmailAddress("nonuser@xyz.com")
+                }
+            };
+
+            IQueryable<User> query = users.AsQueryable();
+
+            query = query.Where(predicate).Cast<User>();
+
+            Assert.AreEqual(1, query.Count());
+        }
+
+        [Test]
+        public void ReplacesParameter()
+        {
+            const string filter = "startswith(familyname, 'Tw')";
             ODataExpressionConverter converter = new();
 
             Expression<Func<IQueryableUser, bool>> converted = converter.Convert<IQueryableUser>(filter);
