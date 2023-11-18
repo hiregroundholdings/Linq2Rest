@@ -34,8 +34,8 @@ namespace LinqCovertTools
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataExpressionConverter"/> class.
         /// </summary>
-        public ODataExpressionConverter(bool ignoreCase = false)
-            : this(Array.Empty<IValueWriter>(), Array.Empty<IValueExpressionFactory>(), null, ignoreCase)
+        public ODataExpressionConverter()
+            : this(Array.Empty<IValueWriter>(), Array.Empty<IValueExpressionFactory>(), null)
         {
         }
 
@@ -45,7 +45,7 @@ namespace LinqCovertTools
         /// <param name="valueWriters">The custom value writers to use.</param>
         /// <param name="valueExpressionFactories">The custom expression writers to use.</param>
         /// <param name="memberNameResolver">The custom <see cref="IMemberNameResolver"/> to use.</param>
-        public ODataExpressionConverter(IEnumerable<IValueWriter> valueWriters, IEnumerable<IValueExpressionFactory> valueExpressionFactories, IMemberNameResolver? memberNameResolver = null, bool ignoreCase = false)
+        public ODataExpressionConverter(IEnumerable<IValueWriter> valueWriters, IEnumerable<IValueExpressionFactory> valueExpressionFactories, IMemberNameResolver? memberNameResolver = null)
         {
             var writers = (valueWriters ?? Enumerable.Empty<IValueWriter>()).ToArray();
             var expressionFactories = (valueExpressionFactories ?? Enumerable.Empty<IValueExpressionFactory>()).ToArray();

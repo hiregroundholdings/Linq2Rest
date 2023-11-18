@@ -19,8 +19,7 @@ namespace LinqCovertTools.Parser.Readers
     {
         public override ConstantExpression Convert(string token)
         {
-            int number;
-            if (int.TryParse(token, out number))
+            if (int.TryParse(token, out int number))
             {
                 return Expression.Constant(number);
             }

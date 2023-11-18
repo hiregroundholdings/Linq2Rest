@@ -12,6 +12,7 @@
 
 namespace LinqCovertTools.Tests
 {
+    using LinqConvertTools.Tests.Fakes;
     using LinqCovertTools.Tests.Provider;
     using NUnit.Framework;
     using System;
@@ -78,6 +79,7 @@ namespace LinqCovertTools.Tests
         [TestCase("indexof(givenName, 'j') eq 0")]
         [TestCase("substring(givenName, 0) eq 'john'")]
         [TestCase("substringof('OH', givenName)")]
+        [TestCase("(indexof(givenname,'John') gt -1 or indexof(familyname,'John') gt -1) eq true")]
         public void CollectionShouldNotBeEmptyWhenCaseIsIgnored(string query)
         {
             // Arrange
@@ -89,7 +91,6 @@ namespace LinqCovertTools.Tests
                     GivenName = "John"
                 }
             };
-
 
             // Act
             var predicate = converter.Convert<User>(query, true).Compile();
@@ -255,45 +256,6 @@ namespace LinqCovertTools.Tests
 
             // Assert
             Assert.AreEqual(1, filterted.Count());
-        }
-
-        private class EmailAddress
-        {
-            public EmailAddress(string value)
-            {
-                Value = value;
-            }
-
-            public string Value { get; set; }
-
-            public string? Name { get; set; }
-        }
-
-        private interface IQueryableUser
-        {
-            string? EmailAddress { get; }
-
-            string? FirstName { get; }
-        }
-
-        private class DateTimeObject
-        {
-            public DateTimeOffset? Start { get; set; }
-        }
-
-        private class User : IQueryableUser
-        {
-            public string GivenName { get; set; }
-
-            public string FamilyName { get; set; }
-
-            public ICollection<string> Roles { get; set; }
-
-            public EmailAddress? EmailAddress { get; set; }
-
-            string? IQueryableUser.EmailAddress => EmailAddress?.Value;
-
-            string? IQueryableUser.FirstName => GivenName;
         }
     }
 }
