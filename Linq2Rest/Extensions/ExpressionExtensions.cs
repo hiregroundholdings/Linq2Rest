@@ -4,6 +4,34 @@ namespace LinqConvertTools.Extensions
 {
     public static class ExpressionExtensions
     {
+        public static Expression CastParameter<T>(this Expression expression, ParameterExpression? parameterExpression)
+        {
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                ParameterExpression? pe = parameterExpression ?? (lambdaExpression.Parameters.Count > 0 ? Expression.Parameter(typeof(T), "x") : null);
+                Expression body = CastParameter<T>(lambdaExpression.Body, pe);
+                return Expression.Lambda(body, pe);
+            }
+            else if (expression is MethodCallExpression methodCallExpression)
+            {
+                Expression @object = CastParameter<T>(methodCallExpression.Object, parameterExpression);
+                return methodCallExpression.Update(@object, methodCallExpression.Arguments);
+            }
+            else if (expression is BinaryExpression binaryExpression)
+            {
+                Expression left = CastParameter<T>(binaryExpression.Left, parameterExpression);
+                Expression right = CastParameter<T>(binaryExpression.Right, parameterExpression);
+                return binaryExpression.Update(left, binaryExpression.Conversion, right);
+            }
+            else if (expression is MemberExpression memberExpression && memberExpression.Member is not null)
+            {
+                ParameterExpression pe = parameterExpression ?? Expression.Parameter(typeof(T), "x");
+                return GetPropertyOrFieldExpression(pe, memberExpression.Member.Name);
+            }
+
+            return expression;
+        }
+
         public static Expression ReplaceMemberExpression(Type type, string memberName, string replacementMemberName, Expression expression, ParameterExpression? parameterExpression)
         {
             if (string.IsNullOrEmpty(memberName))
