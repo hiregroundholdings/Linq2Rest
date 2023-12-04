@@ -10,6 +10,21 @@ namespace LinqConvertTools.Tests.Extensions
     public class ExpressionExtensionsTests
     {
         [Test]
+        public void CastMember()
+        {
+            // Arrange
+            const string filter = "hired ge datetimeoffset'2023-10-13T09:52:00'";
+            ODataExpressionConverter converter = new();
+            Expression<Func<IQueryableUser, bool>> expression = converter.Convert<IQueryableUser>(filter);
+
+            // Act
+            Expression<Func<User, bool>> castedExpression = (Expression<Func<User, bool>>)expression.CastParameter<User>(null);
+
+            // Assert
+            Assert.NotNull(castedExpression);
+        }
+
+        [Test]
         public void ReplacesMemberName()
         {
             const string filter = "startswith(emailAddress, 'user@')";

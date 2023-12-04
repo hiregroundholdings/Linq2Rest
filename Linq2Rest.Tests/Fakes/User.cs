@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace LinqConvertTools.Tests.Fakes
+﻿namespace LinqConvertTools.Tests.Fakes
 {
     internal class EmailAddress
     {
@@ -24,9 +22,13 @@ namespace LinqConvertTools.Tests.Fakes
 
         public EmailAddress? EmailAddress { get; set; }
 
+        public DateTimeOffset Hired { get; set; }
+
         string? IQueryableUser.EmailAddress => EmailAddress?.Value;
 
         string? IQueryableUser.FirstName => GivenName;
+
+        DateTimeOffset? IQueryableUser.Hired => Hired.DateTime;
     }
 
     internal interface IQueryableUser
@@ -36,5 +38,7 @@ namespace LinqConvertTools.Tests.Fakes
         string? FirstName { get; }
 
         string? FamilyName { get; }
+
+        public DateTimeOffset? Hired { get; }
     }
 }

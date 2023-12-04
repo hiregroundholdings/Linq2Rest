@@ -21,6 +21,16 @@ namespace LinqConvertTools.Extensions
             {
                 Expression left = CastParameter<T>(binaryExpression.Left, parameterExpression);
                 Expression right = CastParameter<T>(binaryExpression.Right, parameterExpression);
+
+                if (left.NodeType == ExpressionType.MemberAccess && right is UnaryExpression rightUnaryExpression && rightUnaryExpression.NodeType == ExpressionType.Convert)
+                {
+                    right = Expression.Convert(rightUnaryExpression.Operand, left.Type);
+                }
+                else if (right.NodeType == ExpressionType.MemberAccess && left is UnaryExpression leftUnaryExpression && leftUnaryExpression.NodeType == ExpressionType.Convert)
+                {
+                    left = Expression.Convert(leftUnaryExpression.Operand, right.Type);
+                }
+
                 return binaryExpression.Update(left, binaryExpression.Conversion, right);
             }
             else if (expression is MemberExpression memberExpression && memberExpression.Member is not null)
