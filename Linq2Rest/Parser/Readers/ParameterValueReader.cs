@@ -54,9 +54,6 @@ namespace LinqCovertTools.Parser.Readers
 
         public Expression Read(Type type, string token, IFormatProvider formatProvider)
         {
-
-
-
             var factory = _expressionFactories.FirstOrDefault(x => x.Handles(type));
 
             return factory == null
@@ -66,8 +63,6 @@ namespace LinqCovertTools.Parser.Readers
 
         private static Expression GetParseExpression(string filter, IFormatProvider formatProvider, Type type)
         {
-
-
             var parseMethods = type.GetMethods(BindingFlags.Static | BindingFlags.Public).Where(x => x.Name == "Parse").ToArray();
             if (parseMethods.Length > 0)
             {
@@ -104,9 +99,6 @@ namespace LinqCovertTools.Parser.Readers
 
         private Expression GetKnownConstant(Type type, string token, IFormatProvider formatProvider)
         {
-
-
-
             if (type.IsEnum)
             {
                 var enumValue = Enum.Parse(type, token.Replace("'", string.Empty), true);

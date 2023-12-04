@@ -123,6 +123,22 @@ namespace LinqCovertTools.Parser
             return binaryExpression.Update(left, binaryExpression.Conversion, right);
         }
 
+        private static Expression GetArrayConstant(Expression expression)
+        {
+            if (expression is not ConstantExpression constantExpression || constantExpression.Value is not string constantValue)
+            {
+                return expression;
+            }
+
+            string cleanConstantValue = constantValue.TrimStart('(').TrimEnd(')');
+            object[] values = cleanConstantValue
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(value => value.Trim().Trim('\''))
+                .ToArray();
+
+            return Expression.Constant(values);
+        }
+
         private static Expression GetLeftRightOperation(string token, Expression left, Expression right, bool ignoreCase)
         {
             switch (token.ToUpperInvariant())
@@ -151,6 +167,8 @@ namespace LinqCovertTools.Parser
                     return Expression.AndAlso(left, right);
                 case "OR":
                     return Expression.OrElse(left, right);
+                case "IN":
+                    return Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] { left.Type }, GetArrayConstant(right), left);
                 case "ADD":
                     return Expression.Add(left, right);
                 case "SUB":
@@ -426,7 +444,7 @@ namespace LinqCovertTools.Parser
                 throw new InvalidOperationException("Cannot negate " + negateExpression);
             }
 
-            var expression = GetAnyAllFunctionExpression<T>(filter, sourceParameter, lambdaParameters, formatProvider, ignoreCase)
+            Expression? expression = GetAnyAllFunctionExpression<T>(filter, sourceParameter, lambdaParameters, formatProvider, ignoreCase)
                 ?? GetPropertyExpression<T>(filter, sourceParameter, lambdaParameters)
                 ?? GetArithmeticExpression<T>(filter, sourceParameter, lambdaParameters, type, formatProvider, ignoreCase)
                 ?? GetFunctionExpression<T>(filter, sourceParameter, lambdaParameters, type, formatProvider, ignoreCase)

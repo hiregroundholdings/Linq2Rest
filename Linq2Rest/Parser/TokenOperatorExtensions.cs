@@ -18,30 +18,30 @@ namespace LinqCovertTools.Parser
 
     internal static class TokenOperatorExtensions
     {
-        private static readonly string[] Operations = new[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "not" };
+        private static readonly string[] Operations = new[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "not", "in" };
         private static readonly string[] Combiners = new[] { "and", "or", "not" };
         private static readonly string[] Arithmetic = new[] { "add", "sub", "mul", "div", "mod" };
 
         private static readonly string[] BooleanFunctions = new[] { "substringof", "endswith", "startswith" };
-        private static readonly Regex CollectionFunctionRx = new Regex(@"^[0-9a-zA-Z_]+/(all|any)\((.+)\)$", RegexOptions.Compiled);
-        private static readonly Regex CleanRx = new Regex(@"^\((.+)\)$", RegexOptions.Compiled);
-        private static readonly Regex FunctionRegex = new Regex(@"^([^()/]+)\(.+\)$");
-        private static readonly Regex StringStartRx = new Regex("^[(]*'", RegexOptions.Compiled);
-        private static readonly Regex StringEndRx = new Regex("'[)]*$", RegexOptions.Compiled);
+        private static readonly Regex CollectionFunctionRx = new(@"^[0-9a-zA-Z_]+/(all|any)\((.+)\)$", RegexOptions.Compiled);
+        private static readonly Regex CleanRx = new(@"^\((.+)\)$", RegexOptions.Compiled);
+        private static readonly Regex FunctionRegex = new(@"^([^()/]+)\(.+\)$");
+        private static readonly Regex StringStartRx = new("^[(]*'", RegexOptions.Compiled);
+        private static readonly Regex StringEndRx = new("'[)]*$", RegexOptions.Compiled);
 
         public static bool IsCombinationOperation(this string operation)
         {
-            return Combiners.Any(x => string.Equals(x, operation, StringComparison.OrdinalIgnoreCase));
+            return Array.Exists(Combiners, x => string.Equals(x, operation, StringComparison.OrdinalIgnoreCase));
         }
 
         public static bool IsOperation(this string operation)
         {
-            return Operations.Any(x => string.Equals(x, operation, StringComparison.OrdinalIgnoreCase));
+            return Array.Exists(Operations, x => string.Equals(x, operation, StringComparison.OrdinalIgnoreCase));
         }
 
         public static bool IsArithmetic(this string operation)
         {
-            return Arithmetic.Any(x => string.Equals(x, operation, StringComparison.OrdinalIgnoreCase));
+            return Array.Exists(Arithmetic, x => string.Equals(x, operation, StringComparison.OrdinalIgnoreCase));
         }
 
         public static bool IsImpliedBoolean(this string expression)
@@ -51,7 +51,7 @@ namespace LinqCovertTools.Parser
                 var split = expression.Split(' ');
                 return !split.Intersect(Operations).Any()
                 && !split.Intersect(Combiners).Any()
-                && (BooleanFunctions.Any(x => split[0].StartsWith(x, StringComparison.OrdinalIgnoreCase)) ||
+                && (Array.Exists(BooleanFunctions, x => split[0].StartsWith(x, StringComparison.OrdinalIgnoreCase)) ||
                     CollectionFunctionRx.IsMatch(expression));
             }
 

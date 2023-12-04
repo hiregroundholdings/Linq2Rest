@@ -12,6 +12,7 @@
 
 namespace LinqCovertTools.Tests
 {
+    using LinqConvertTools.Extensions;
     using LinqConvertTools.Tests.Fakes;
     using LinqCovertTools.Tests.Provider;
     using NUnit.Framework;
@@ -252,10 +253,44 @@ namespace LinqCovertTools.Tests
             };
 
             // Act
-            var filterted = objects.AsQueryable().Where(converted);
+            var filtered = objects.AsQueryable().Where(converted);
 
             // Assert
-            Assert.AreEqual(1, filterted.Count());
+            Assert.AreEqual(1, filtered.Count());
+        }
+
+        [TestCase("FamilyName in ('Guess', 'One')")]
+        [TestCase("FamilyName in ('One')")]
+        public void CanFilterUsingInOperator(string filter)
+        {
+            // Arrange
+            ODataExpressionConverter converter = new();
+            List<User> users = new()
+            {
+                new User()
+                {
+                    GivenName = "User",
+                    FamilyName = "One",
+                },
+                new User()
+                {
+                    GivenName = "Sarah",
+                    FamilyName = "Jane",
+                },
+                new User()
+                {
+                    GivenName = "Ashley",
+                    FamilyName = "Dugane",
+                },
+            };
+
+            // Act
+            Expression<Func<IQueryableUser, bool>> predicate = converter.Convert<IQueryableUser>(filter);
+            Expression<Func<User, bool>> casted = (Expression<Func<User, bool>>)predicate.CastParameter<User>(null);
+            var filtered = users.AsQueryable().Where(casted);
+
+            // Assert
+            Assert.AreEqual(1, filtered.Count());
         }
     }
 }

@@ -43,9 +43,9 @@ namespace LinqCovertTools
 
         static MethodProvider()
         {
-            var stringType = typeof(string);
-            var datetimeType = typeof(DateTime);
-            var mathType = typeof(Math);
+            Type stringType = typeof(string);
+            Type datetimeType = typeof(DateTime);
+            Type mathType = typeof(Math);
 
             InnerContainsMethod = stringType.GetMethod("Contains", new[] { stringType });
             InnerIndexOfMethod = stringType.GetMethod("IndexOf", new[] { stringType });
@@ -76,7 +76,6 @@ namespace LinqCovertTools
         {
             get
             {
-
                 return InnerIndexOfMethod;
             }
         }
@@ -85,7 +84,6 @@ namespace LinqCovertTools
         {
             get
             {
-
                 return InnerContainsMethod;
             }
         }

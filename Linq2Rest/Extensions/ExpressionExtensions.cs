@@ -14,8 +14,16 @@ namespace LinqConvertTools.Extensions
             }
             else if (expression is MethodCallExpression methodCallExpression)
             {
-                Expression @object = CastParameter<T>(methodCallExpression.Object, parameterExpression);
-                return methodCallExpression.Update(@object, methodCallExpression.Arguments);
+                Expression[] args = methodCallExpression.Arguments.Select(a => CastParameter<T>(a, parameterExpression)).ToArray();
+                if (methodCallExpression.Object is null)
+                {
+                    return methodCallExpression.Update(null, args);
+                }
+                else
+                {
+                    Expression @object = CastParameter<T>(methodCallExpression.Object, parameterExpression);
+                    return methodCallExpression.Update(@object, args);
+                }
             }
             else if (expression is BinaryExpression binaryExpression)
             {
