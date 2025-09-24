@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace LinqConvertTools.Extensions
 {
@@ -39,7 +40,31 @@ namespace LinqConvertTools.Extensions
                     left = Expression.Convert(leftUnaryExpression.Operand, right.Type);
                 }
 
-                return binaryExpression.Update(left, binaryExpression.Conversion, right);
+                try
+                {
+                    return binaryExpression.Update(left, binaryExpression.Conversion, right);
+                }
+                catch (InvalidOperationException) when (left.Type != right.Type)
+                {
+                    if (GetImplicitOperator(right.Type, left.Type) is MethodInfo opRToL)
+                    {
+                        var parameterType = opRToL.GetParameters()[0].ParameterType;
+                        right = LiftIfNeeded(right, parameterType);
+                        right = Expression.Convert(right, left.Type, opRToL);
+                    }
+                    else if (GetImplicitOperator(left.Type, right.Type) is MethodInfo opLToR)
+                    {
+                        var parameterType = opLToR.GetParameters()[0].ParameterType;
+                        left = LiftIfNeeded(left, parameterType);
+                        left = Expression.Convert(left, right.Type, opLToR);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                    
+                    return binaryExpression.Update(left, binaryExpression.Conversion, right);
+                }
             }
             else if (expression is MemberExpression memberExpression && memberExpression.Member is not null)
             {
@@ -100,6 +125,61 @@ namespace LinqConvertTools.Extensions
         public static Expression ReplaceMemberExpression<T>(this Expression expression, string memberName, string replacementMemberName)
         {
             return ReplaceMemberExpression(typeof(T), memberName, replacementMemberName, expression, null);
+        }
+
+        private static Expression LiftIfNeeded(Expression expr, Type parameterType)
+        {
+            // If the operator expects Nullable<T> and we have T, lift T -> Nullable<T>
+            var underlying = Nullable.GetUnderlyingType(parameterType);
+            if (underlying is not null && expr.Type == underlying)
+            {
+                return Expression.Convert(expr, parameterType); // built-in T -> Nullable<T>
+            }
+
+            return expr;
+        }
+
+        private static MethodInfo? GetImplicitOperator(Type fromType, Type toType)
+        {
+            static bool Match(ParameterInfo p, Type from, Type to, MethodInfo m)
+            {
+                // exact: TFrom -> TTo
+                if (p.ParameterType == from && m.ReturnType == to)
+                {
+                    return true;
+                }
+
+                // lifted: TFrom? -> TTo?
+                var underlyingParameterType = Nullable.GetUnderlyingType(p.ParameterType) ?? p.ParameterType;
+                var underlyingReturnType = Nullable.GetUnderlyingType(m.ReturnType) ?? m.ReturnType;
+                return underlyingParameterType == from && underlyingReturnType == to;
+            }
+
+            var underlyingFromType = Nullable.GetUnderlyingType(fromType) ?? fromType;
+            var underlyingToType = Nullable.GetUnderlyingType(toType) ?? toType;
+            foreach (var t in new[] { underlyingFromType, underlyingToType })
+            {
+                foreach (var m in t.GetMethods(BindingFlags.Public | BindingFlags.Static))
+                {
+                    if (m.Name != "op_Implicit")
+                    {
+                        continue;
+                    }
+
+                    var ps = m.GetParameters();
+                    if (ps.Length != 1)
+                    {
+                        continue;
+                    }
+
+                    if (Match(ps[0], fromType, toType, m))
+                    {
+                        return m;
+                    }
+                }
+            }
+
+            return null;
         }
 
         private static Expression GetPropertyOrFieldExpression(ParameterExpression parameterExpression, string propOrFieldName)

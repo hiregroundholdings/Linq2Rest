@@ -1,4 +1,6 @@
-﻿namespace LinqConvertTools.Tests.Fakes
+﻿using LinqCovertTools.Tests.Provider;
+
+namespace LinqConvertTools.Tests.Fakes
 {
     internal class EmailAddress
     {
@@ -18,6 +20,8 @@
 
         public string FamilyName { get; set; }
 
+        public ValueObject? Salutation { get; set; }
+
         public ICollection<string> Roles { get; set; }
 
         public EmailAddress? EmailAddress { get; set; }
@@ -27,6 +31,8 @@
         string? IQueryableUser.EmailAddress => EmailAddress?.Value;
 
         string? IQueryableUser.FirstName => GivenName;
+
+        string? IQueryableUser.Salutation => Salutation;
 
         DateTimeOffset? IQueryableUser.Hired => Hired.DateTime;
     }
@@ -38,6 +44,8 @@
         string? FirstName { get; }
 
         string? FamilyName { get; }
+
+        string? Salutation { get; }
 
         public DateTimeOffset? Hired { get; }
     }

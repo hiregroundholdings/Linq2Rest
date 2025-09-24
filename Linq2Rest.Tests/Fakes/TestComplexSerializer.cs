@@ -19,7 +19,7 @@ namespace LinqCovertTools.Tests.Fakes
     using System.IO;
     using System.Runtime.Serialization.Json;
 
-    public class TestComplexSerializer : ISerializer<ComplexDto>
+    internal class TestComplexSerializer : ISerializer<ComplexDto>
     {
         private readonly DataContractJsonSerializer _innerListSerializer = new DataContractJsonSerializer(typeof(List<ComplexDto>));
         private readonly DataContractJsonSerializer _innerSerializer = new DataContractJsonSerializer(typeof(ComplexDto));

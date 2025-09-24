@@ -64,7 +64,6 @@ namespace LinqCovertTools.Tests
                 }
             };
 
-
             // Act
             var predicate = converter.Convert<User>(query, false).Compile();
             var results = users.Where(predicate);
@@ -206,6 +205,39 @@ namespace LinqCovertTools.Tests
             query = query.Where(converted).Cast<User>();
 
             Assert.AreEqual(1, query.Count());
+        }
+
+        [Test]
+        public void ConvertsFilterToExpressionForValueObjects()
+        {
+            const string filter = "salutation eq 'first'";
+            var converter = new ODataExpressionConverter();
+
+            Expression<Func<IQueryableUser, bool>> predicate = converter.Convert<IQueryableUser>(filter);
+
+            List<User> users = new()
+            {
+                new User()
+                {
+                    GivenName = "User",
+                    FamilyName = "One",
+                },
+                new User()
+                {
+                    GivenName = "User",
+                    FamilyName = "Two",
+                    Salutation = ValueObject.FirstValueObject,
+                }
+            };
+
+            IQueryable<User> query = users.AsQueryable();
+
+            Expression<Func<User, bool>> userPredicate = (Expression<Func<User, bool>>)predicate.CastParameter<User>(null);
+            var result = query.Where(userPredicate).ToList();
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("User", result[0].GivenName);
+            Assert.AreEqual("Two", result[0].FamilyName);
         }
 
         [Test]

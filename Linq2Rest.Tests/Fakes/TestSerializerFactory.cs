@@ -15,7 +15,7 @@ namespace LinqCovertTools.Tests.Fakes
     using LinqCovertTools.Provider;
     using LinqCovertTools.Tests.Provider;
 
-    public class TestSerializerFactory : ISerializerFactory
+    internal class TestSerializerFactory : ISerializerFactory
     {
         private readonly IMemberNameResolver _memberNameResolver;
 
