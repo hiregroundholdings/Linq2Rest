@@ -36,7 +36,7 @@
  * - Gonzalo Paniagua Javier <gonzalo@ximian.com>
  */
 
-namespace LinqCovertTools
+namespace LinqConvertTools
 {
     using System.IO;
     using System.Linq;

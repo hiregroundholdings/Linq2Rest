@@ -10,10 +10,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Fakes
+namespace LinqConvertTools.Tests.Fakes
 {
-    using LinqCovertTools.Provider;
-    using LinqCovertTools.Tests.Provider;
+    using LinqConvertTools.Provider;
+    using LinqConvertTools.Tests.Provider;
     using System;
     using System.Collections.Generic;
     using System.IO;

@@ -10,12 +10,12 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools
+namespace LinqConvertTools
 {
-    using LinqCovertTools.Parser;
-    using LinqCovertTools.Parser.Readers;
-    using LinqCovertTools.Provider;
-    using LinqCovertTools.Provider.Writers;
+    using LinqConvertTools.Parser;
+    using LinqConvertTools.Parser.Readers;
+    using LinqConvertTools.Provider;
+    using LinqConvertTools.Provider.Writers;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

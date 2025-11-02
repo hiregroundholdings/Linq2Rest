@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Fakes
+namespace LinqConvertTools.Tests.Fakes
 {
     public class NorthwindCustomer
     {

@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Fakes
+namespace LinqConvertTools.Tests.Fakes
 {
-    using LinqCovertTools.Provider;
+    using LinqConvertTools.Provider;
     using System.Collections.Generic;
     using System.IO;
     using System.Runtime.Serialization.Json;

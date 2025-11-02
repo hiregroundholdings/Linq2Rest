@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Parser
+namespace LinqConvertTools.Parser
 {
     using System.Diagnostics.Contracts;
 

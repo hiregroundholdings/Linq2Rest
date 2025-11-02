@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Provider
+namespace LinqConvertTools.Provider
 {
     using System.IO;
 

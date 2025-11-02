@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Provider.Writers
+namespace LinqConvertTools.Tests.Provider.Writers
 {
-    using LinqCovertTools.Provider.Writers;
+    using LinqConvertTools.Provider.Writers;
     using NUnit.Framework;
 
     [TestFixture]

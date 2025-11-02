@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools
+namespace LinqConvertTools
 {
     /// <summary>
     /// Settings

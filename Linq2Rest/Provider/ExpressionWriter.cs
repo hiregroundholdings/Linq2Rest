@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Provider
+namespace LinqConvertTools.Provider
 {
-    using LinqCovertTools.Provider.Writers;
+    using LinqConvertTools.Provider.Writers;
     using System;
     using System.Collections.Generic;
     using System.Linq;

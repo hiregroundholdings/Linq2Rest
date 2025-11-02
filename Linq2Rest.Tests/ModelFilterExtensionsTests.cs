@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests
+namespace LinqConvertTools.Tests
 {
-    using LinqCovertTools.Tests.Fakes;
+    using LinqConvertTools.Tests.Fakes;
     using NUnit.Framework;
     using System;
     using System.Collections.Specialized;

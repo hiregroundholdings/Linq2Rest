@@ -1,5 +1,5 @@
 ﻿using LinqConvertTools.Tests.Fakes;
-using LinqCovertTools;
+using LinqConvertTools;
 using LinqConvertTools.Extensions;
 using NUnit.Framework;
 using System.Linq.Expressions;

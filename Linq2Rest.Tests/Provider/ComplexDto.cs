@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Provider
+namespace LinqConvertTools.Tests.Provider
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

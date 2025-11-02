@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Fakes.ComplexDomain
+namespace LinqConvertTools.Tests.Fakes.ComplexDomain
 {
     /// <summary>
     /// Defines a value type in Metal.

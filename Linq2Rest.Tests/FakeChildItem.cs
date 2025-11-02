@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests
+namespace LinqConvertTools.Tests
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;

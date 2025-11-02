@@ -10,11 +10,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests
+namespace LinqConvertTools.Tests
 {
     using LinqConvertTools.Extensions;
     using LinqConvertTools.Tests.Fakes;
-    using LinqCovertTools.Tests.Provider;
+    using LinqConvertTools.Tests.Provider;
     using NUnit.Framework;
     using System;
     using System.Linq;

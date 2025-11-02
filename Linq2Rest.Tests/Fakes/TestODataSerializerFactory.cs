@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Fakes
+namespace LinqConvertTools.Tests.Fakes
 {
-    using LinqCovertTools.Provider;
+    using LinqConvertTools.Provider;
 
     public class TestODataSerializerFactory : ISerializerFactory
     {

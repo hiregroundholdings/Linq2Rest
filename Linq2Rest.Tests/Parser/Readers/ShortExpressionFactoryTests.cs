@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Parser.Readers
+namespace LinqConvertTools.Tests.Parser.Readers
 {
-    using LinqCovertTools.Parser.Readers;
+    using LinqConvertTools.Parser.Readers;
     using NUnit.Framework;
     using System;
 

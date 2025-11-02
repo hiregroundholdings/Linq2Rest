@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Provider.Writers
+namespace LinqConvertTools.Provider.Writers
 {
     internal class DecimalValueWriter : RationalValueWriter<decimal>
     {

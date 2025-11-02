@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Provider.Writers
+namespace LinqConvertTools.Provider.Writers
 {
     internal abstract class IntegerValueWriter<T> : ValueWriterBase<T>
     {

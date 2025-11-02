@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Tests.Implementations
+namespace LinqConvertTools.Tests.Implementations
 {
     using System.Runtime.Serialization;
     using System.Xml.Serialization;

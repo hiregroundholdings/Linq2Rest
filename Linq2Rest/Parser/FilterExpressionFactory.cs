@@ -10,9 +10,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Parser
+namespace LinqConvertTools.Parser
 {
-    using LinqCovertTools.Parser.Readers;
+    using LinqConvertTools.Parser.Readers;
     using System;
     using System.Collections.Generic;
     using System.Globalization;

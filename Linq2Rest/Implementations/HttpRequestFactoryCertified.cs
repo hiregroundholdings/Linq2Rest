@@ -9,7 +9,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Implementations
+namespace LinqConvertTools.Implementations
 {
     using Provider;
     using System;

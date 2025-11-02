@@ -1,4 +1,4 @@
-﻿using LinqCovertTools.Tests.Provider;
+﻿using LinqConvertTools.Tests.Provider;
 
 namespace LinqConvertTools.Tests.Fakes
 {

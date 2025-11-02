@@ -10,7 +10,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LinqCovertTools.Parser.Readers
+namespace LinqConvertTools.Parser.Readers
 {
     internal class ByteArrayExpressionFactory : ByteArrayExpressionFactoryBase<byte[]>
     {
